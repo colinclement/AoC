@@ -21,4 +21,20 @@
         r (apply vector (sort (mapv #(get % 1) idlist)))] 
     (apply + (mapv #(abs (- %2 %1)) r l))))
 
+
+
+(defn similarity-score [l r]
+  (let [freq (frequencies r)]
+    ;(swap! counts #(update % :a (constantly 1)))
+    (apply + (mapv #(* (get freq % 0) %) l))
+  )
+)
+
+
+;; part one
+;; compute the sorted order absolute difference of the two lists of numbers
 (summed-sorted-difference ids)
+
+
+;; part two
+(similarity-score (mapv #(get % 0) ids) (mapv #(get % 1) ids))
