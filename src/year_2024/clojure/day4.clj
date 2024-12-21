@@ -40,11 +40,11 @@ MXMXAXMASX")
         chars (str/split (str/replace s #"\n" "") #"")]
     (for [x (range 0 W)]
       (apply str (for [y (range 0 H)]
-        (get chars (+ (* y W) x)))))))
+                   (get chars (+ (* y W) x)))))))
 
 ; test if vertical of vertical is horizontal
-(= 
- (str/split-lines test-string) 
+(=
+ (str/split-lines test-string)
  (vertical-subsequences
   (str/join "\n" (vertical-subsequences test-string))))
 
@@ -85,15 +85,45 @@ XXXXXX......
         (add-reverse-all (vertical-subsequences (shift-all inp true)))
         (add-reverse-all (vertical-subsequences (shift-all inp false))))
        (map count-xmas)
-       (apply +)
-   ))
+       (apply +)))
 
-  (part-one test-string)
+(part-one test-string)
 
 (test/deftest test-part-1
   (test/is (= 18 (part-one test-string))))
 
 (part-one input-data)
+
+;; part 2
+
+(defn get-coord [lines x y]
+  (nth (nth lines y) x))
+
+(defn is-x-mas [grid x y]
+  (let [nw (get-coord grid (- x 1) (- y 1))
+        ne (get-coord grid (+ x 1) (- y 1))
+        se (get-coord grid (+ x 1) (+ y 1))
+        sw (get-coord grid (- x 1) (+ y 1))
+        s (str nw ne se sw)]
+    (cond
+      (= s "MMSS") 1
+      (= s "SMMS") 1
+      (= s "MSSM") 1
+      (= s "SSMM") 1
+      :else 0)))
+
+(defn count-cross-mas [inp]
+  (let [lines (str/split-lines inp)]
+    (->> (for [x (range 1 (dec (count (peek lines))))]
+           (for [y (range 1 (dec (count lines)))]
+             (if (= (get-coord lines x y) \A) (is-x-mas lines x y) 0)))
+         (map #(apply + %))
+         (apply +))))
+
+(count-cross-mas input-data)
+
+(test/deftest part-two
+  (test/is (= 9 (count-cross-mas test-string))))
 
 (comment
   (test/run-tests))
