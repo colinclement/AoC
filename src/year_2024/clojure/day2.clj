@@ -10,8 +10,6 @@
   (->> (str/split-lines inp)
        (map split)))
 
-(def data-list (parse-data data-string))
-
 (def test-data "7 6 4 2 1
 1 2 7 8 9
 9 7 6 2 1
