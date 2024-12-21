@@ -56,7 +56,7 @@
 
 ;; one strategy: work with diffs; removing an element is the same
 ;; as summing an adjacent pairs of diffs before doing the same
-;; monitonic and one-to-three logic
+;; monotonic and one-to-three logic
 ;; 2 1 2 4 5 3 -> -1 1 2 1 -2
 
 (defn diffs-less-one [inp]
