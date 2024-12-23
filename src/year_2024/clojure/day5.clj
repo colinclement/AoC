@@ -38,7 +38,6 @@
 ; nested map {"page", {"page required after", 1 "page required after", 1...}}
 (defn get-rules [inp]
   (reduce
-   ;#(assoc %1 (get %2 1) (assoc (%1 (get %2 1) {}) (get %2 2) 1))
    (fn [mp kv]
      (assoc mp (get kv 1) 
             (assoc (mp (get kv 1) {}) (get kv 2) 1))
