@@ -38,7 +38,11 @@
 ; nested map {"page", {"page required after", 1 "page required after", 1...}}
 (defn get-rules [inp]
   (reduce
-   #(assoc %1 (get %2 1) (assoc (%1 (get %2 1) {}) (get %2 2) 1))
+   ;#(assoc %1 (get %2 1) (assoc (%1 (get %2 1) {}) (get %2 2) 1))
+   (fn [mp kv]
+     (assoc mp (get kv 1) 
+            (assoc (mp (get kv 1) {}) (get kv 2) 1))
+     )
    {}
    (re-seq #"(\d+)\|(\d+)\n" inp)))
 
@@ -50,7 +54,6 @@
 (defn is-ordered [upd rules]
   (= upd (sort #(contains? (rules %1) %2) upd)))
 
-
 (defn part-one [inp]
   (let [rules (get-rules inp)
         updates (get-updates inp)]
@@ -61,4 +64,28 @@
 
 (part-one test-string)
 
-(part-one input-string)
+(test/deftest test-part-1
+  (test/is (= 143 (part-one test-string)))
+  (test/is (= 5087 (part-one input-string))))
+
+; part 2
+
+(defn middle-of-unsorted [upd rules]
+  (let [s (sort #(contains? (rules %1) %2) upd)]
+    (if (= s upd) "0" (nth s (quot (count s) 2)))))
+
+(defn part-two [inp]
+  (let [rules (get-rules inp)
+        updates (get-updates inp)]
+    (->> (map #(middle-of-unsorted % rules) updates)
+         (map read-string)
+         (apply +)
+         )))
+
+(test/deftest test-part-2
+  (test/is (= 123 (part-two test-string)))
+  (test/is (= 4971 (part-two input-string)))
+  )
+
+(comment
+  (test/run-tests))
